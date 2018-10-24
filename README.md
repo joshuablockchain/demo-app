@@ -1,3 +1,10 @@
-# demo-app
+# Cardo - The Province Man's Web App
 
-This is for blockchain 100 demo
+This web app requires Node 8 or higher.
+
+How to run the web app.
+
+```
+npm install
+node index.js
+```

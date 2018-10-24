@@ -1,42 +1,43 @@
+/**
+ * @description
+ * Entry file for The Province Man's Web App
+ */
 const express = require('express');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
-const port = 3000;
+const indexRouter = require('./server/routers/indexRouter');
+const notesRouter = require('./server/routers/notesRouter');
+const aboutRouter = require('./server/routers/aboutRouter');
+const port = 3300;
+
+app.use(morgan('dev'));
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
 app.use(bodyParser.json());
 
-let dogs = [];
-
-
-app.get('/:index', (req,res) => res.status(200).json({dog:dogs[req.params.index]}));
-
-app.get('/', (req,res) => res.status(200).json({dogs: dogs}));
-app.post('/', (req,res) => {
-
-dogs.push(req.body.dogName);
-res.status(200).json({status: `Added ${req.body.dogName}!`});
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
-
+app.use((req, res, next) => {
+  req.viewModel = {
+    title: 'Card - Note Taking App'
+  };
+  next();
 });
 
+app.use(express.static('public'));
+
+// NOTE: The __dirname is important for setting up the directory of the views
+app.set('views', path.join(__dirname, 'server/views'));
+app.set('view engine', 'pug');
 
 
+app.use('/', indexRouter);
+app.use('/about', aboutRouter);
+app.use('/api/notes', notesRouter);
 
-
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-/*
-app.post('/',(req,res) => {
-   const name = req.body.name;
-   res.send(`Hello ${name[4]}!`);
-});
-
-app.get('/', (req, res) => {
-    res.getElementById("DEMO-APP").innerHTML = name;
-});
-*/
-
-app.listen(port, () => {
-    console.log('Running at port 3000!');
+app.listen(port, (err) => {
+  if(err) { return console.error(err); }
+  console.log(`Listening to ${port}...`);
 });
