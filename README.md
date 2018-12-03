@@ -1,7 +1,7 @@
 # How to run this contract
 
 
-## Go to brower
+## Go to browser
 
 - Go to [remix.ethereum.org](http://remix.ethereum.org/)
 
